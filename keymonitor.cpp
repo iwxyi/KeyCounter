@@ -1,26 +1,27 @@
+#include <windows.h>
+#include <dbghelp.h>
 #include "keymonitor.h"
-#include <QtDebug>
-#include "keycapturer.h"
 
 LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam);
 
 HMODULE WINAPI ModuleFromAddress(PVOID pv);
+
 static HHOOK hHook;
+
+QHash<ulong, QString> KeyCodeMap;
 
 LRESULT KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
-    KBDLLHOOKSTRUCT *Key_Info = (KBDLLHOOKSTRUCT *)(lParam);
+    KBDLLHOOKSTRUCT *Key_Info = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
     if (HC_ACTION == nCode)
     {
         if (WM_KEYDOWN == wParam || WM_SYSKEYDOWN == wParam) //如果按键为按下状态
         {
-            if (Key_Info->vkCode <= 107 && Key_Info->vkCode >= 65)
+            DWORD code = Key_Info->vkCode;
+            if (KeyCodeMap.contains(code))
             {
-                qDebug() << Key_Info->vkCode;
-                if (KeyCapturer::instance())
-                {
-                    KeyCapturer::instance()->setkeyValue(int(Key_Info->vkCode));
-                }
+                // qDebug() << "key: " << code << KeyCodeMap.value(code);
+                KeyMonitor::instance()->setkeyValue(code);
             }
         }
     }
@@ -40,14 +41,29 @@ HMODULE ModuleFromAddress(PVOID pv)
     }
 }
 
-int startHook()
+// =================================================
+
+KeyMonitor::KeyMonitor()
+{
+}
+
+KeyMonitor::~KeyMonitor()
+{
+}
+
+int KeyMonitor::startHook()
 {
     hHook = SetWindowsHookExW(WH_KEYBOARD_LL, KeyboardHookProc, ModuleFromAddress(PVOID(KeyboardHookProc)), 0);
     int error = int(GetLastError());
     return error;
 }
 
-bool stopHook()
+bool KeyMonitor::stopHook()
 {
     return UnhookWindowsHookEx(hHook);
+}
+
+void KeyMonitor::setkeyValue(ulong key)
+{
+    emit getKey(key);
 }

@@ -1,12 +1,39 @@
-#ifndef KEYMONITOR_H
-#define KEYMONITOR_H
+#ifndef KEYCAPTURER_H
+#define KEYCAPTURER_H
 
+#include <QObject>
+#include <QHash>
 
-#include <windows.h>
-#include <dbghelp.h>
+extern QHash<ulong, QString> KeyCodeMap;
 
-int startHook();
+class KeyMonitor : public QObject
+{
+    Q_OBJECT
 
-bool stopHook();
+public:
+    virtual ~KeyMonitor();
+    static KeyMonitor *&instance()
+    {
+        static KeyMonitor *s = nullptr;
+        if (s == nullptr)
+        {
+            s = new KeyMonitor();
+        }
+        return s;
+    }
 
-#endif // KEYMONITOR_H
+    int startHook();
+
+    bool stopHook();
+
+public:
+    void setkeyValue(ulong key);
+
+protected:
+    KeyMonitor();
+
+signals:
+    void getKey(int);
+};
+
+#endif // KEYCAPTURER_H

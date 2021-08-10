@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/documents">
+        <file>key_code.txt</file>
+    </qresource>
+</RCC>
