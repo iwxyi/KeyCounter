@@ -19,13 +19,13 @@ KeyCounter::KeyCounter(QSettings *settings, QObject *parent)
         QStringList sl = line.split("\t", QString::SkipEmptyParts);
         if (sl.size() >= 2)
         {
-            KeyCodeMap.insert(static_cast<ulong>(sl.at(0).toInt()), sl.at(1));
+            KeyCodeNameMap.insert(static_cast<ulong>(sl.at(0).toInt()), sl.at(1));
         }
         line = keyCodeIn.readLine();
     }
 
     // 恢复之前的键值
-    for (auto key: KeyCodeMap.keys())
+    for (auto key: KeyCodeNameMap.keys())
     {
         keyCountMap.insert(key, settings->value("count/" + QString::number(key), 0).toInt());
     }
@@ -41,4 +41,9 @@ void KeyCounter::addKey(ulong keyCode)
     keyCountMap[keyCode]++;
     settings->setValue("count/" + QString::number(keyCode), keyCountMap.value(keyCode));
     // qDebug() << "key: " << keyCode << KeyCodeMap.value(keyCode) << keyCountMap[keyCode];
+}
+
+int KeyCounter::getKeyCount(ulong keyCode) const
+{
+    return keyCountMap.value(keyCode);
 }

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
+#include <QStandardItemModel>
 #include "keycounter.h"
 
 QT_BEGIN_NAMESPACE
@@ -15,7 +16,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() override;
 
 private:
     void initTray();
@@ -31,9 +32,19 @@ private slots:
 
     void on_actionAbout_triggered();
 
+protected:
+    void showEvent(QShowEvent* e) override;
+    void closeEvent(QCloseEvent*e) override;
+
 private:
     Ui::MainWindow *ui;
-    QSettings* settings;
-    KeyCounter counter;
+    QSettings* settings = nullptr;
+    KeyCounter* counter = nullptr;
+    QStandardItemModel* countModel = nullptr;
+    QMap<ulong, int> tableRowMapping;
+
+    const int Col_Key_Code = -1;
+    const int Col_Key_Name = 0;
+    const int Col_Key_Count = 1;
 };
 #endif // MAINWINDOW_H

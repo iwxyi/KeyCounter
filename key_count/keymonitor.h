@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QHash>
 
-extern QHash<ulong, QString> KeyCodeMap;
+extern QHash<ulong, QString> KeyCodeNameMap;
 
 class KeyMonitor : public QObject
 {

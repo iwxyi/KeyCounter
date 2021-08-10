@@ -8,7 +8,7 @@ HMODULE WINAPI ModuleFromAddress(PVOID pv);
 
 static HHOOK hHook;
 
-QHash<ulong, QString> KeyCodeMap;
+QHash<ulong, QString> KeyCodeNameMap;
 
 LRESULT KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
@@ -18,7 +18,7 @@ LRESULT KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam)
         if (WM_KEYDOWN == wParam || WM_SYSKEYDOWN == wParam) //如果按键为按下状态
         {
             DWORD code = Key_Info->vkCode;
-            if (KeyCodeMap.contains(code))
+            if (KeyCodeNameMap.contains(code))
             {
                 // qDebug() << "key: " << code << KeyCodeMap.value(code);
                 KeyMonitor::instance()->setkeyValue(code);

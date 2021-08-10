@@ -13,7 +13,7 @@ public:
 
     void addKey(ulong keyCode);
 
-    int getKey(ulong keyCode) const;
+    int getKeyCount(ulong keyCode) const;
 
 private:
     QSettings* settings;
