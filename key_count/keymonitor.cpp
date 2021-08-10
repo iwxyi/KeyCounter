@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <dbghelp.h>
+#include <QDebug>
 #include "keymonitor.h"
 
 LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam);
@@ -18,9 +19,9 @@ LRESULT KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam)
         if (WM_KEYDOWN == wParam || WM_SYSKEYDOWN == wParam) //如果按键为按下状态
         {
             DWORD code = Key_Info->vkCode;
+            // qDebug() << "key: " << code;
             if (KeyCodeNameMap.contains(code))
             {
-                // qDebug() << "key: " << code << KeyCodeMap.value(code);
                 KeyMonitor::instance()->setkeyValue(code);
             }
         }
