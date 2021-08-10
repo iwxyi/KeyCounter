@@ -13,6 +13,8 @@ int main(int argc, char *argv[])
 #endif
 
     QApplication a(argc, argv);
+    QCoreApplication::setApplicationName("KeyCounter");
+    QCoreApplication::setApplicationVersion("v0.1");
 
     // 我只想实现一个高效简约的按键统计，不想要消耗太多资源
     // 如果加上单例运行，则需要模块添加 Network

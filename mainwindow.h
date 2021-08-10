@@ -19,6 +19,7 @@ public:
     ~MainWindow() override;
 
 private:
+    void initView();
     void initTray();
 
 private slots:
@@ -31,6 +32,8 @@ private slots:
     void on_actionGitHub_triggered();
 
     void on_actionAbout_triggered();
+
+    void on_actionStartup_triggered();
 
 protected:
     void showEvent(QShowEvent* e) override;

@@ -2,6 +2,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QMessageBox>
+#include <QDir>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -26,6 +27,18 @@ MainWindow::MainWindow(QWidget *parent)
             });
     KeyMonitor::instance()->startHook();
 
+    // 初始化
+    initView();
+    initTray();
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::initView()
+{
     // 初始化Model
     countModel = new QStandardItemModel(this);
     countModel->setColumnCount(2);
@@ -44,13 +57,8 @@ MainWindow::MainWindow(QWidget *parent)
     }
     ui->countTable->setModel(countModel);
 
-    // 其他
-    initTray();
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
+    bool reboot = settings->value("runtime/reboot", false).toBool();
+    ui->actionStartup->setChecked(reboot);
 }
 
 void MainWindow::initTray()
@@ -123,4 +131,21 @@ void MainWindow::closeEvent(QCloseEvent *e)
 {
     settings->setValue("mainwindow/geometry", saveGeometry());
     return QMainWindow::closeEvent(e);
+}
+
+void MainWindow::on_actionStartup_triggered()
+{
+    QString appName = QApplication::applicationName();
+    QString appPath = QDir::toNativeSeparators(QApplication::applicationFilePath());
+    QSettings *reg=new QSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+    QString val = reg->value(appName).toString();// 如果此键不存在，则返回的是空字符串
+    bool reboot = !settings->value("runtime/reboot", false).toBool();
+    if (reboot)
+        reg->setValue(appName, appPath);
+    else
+        reg->remove(appName);
+    settings->setValue("runtime/reboot", reboot);
+    ui->actionStartup->setChecked(reboot);
+    qInfo() << "设置自启：" << reboot;
+    reg->deleteLater();
 }
