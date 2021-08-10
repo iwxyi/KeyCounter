@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSystemTrayIcon>
 #include "keycounter.h"
 
 QT_BEGIN_NAMESPACE
@@ -15,6 +16,20 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+private:
+    void initTray();
+
+private slots:
+    void trayAction(QSystemTrayIcon::ActivationReason reason);
+
+    void on_actionFilePath_triggered();
+
+    void on_actionExit_triggered();
+
+    void on_actionGitHub_triggered();
+
+    void on_actionAbout_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -15,15 +15,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += \
+    key_count/ \
+    third_party/
+
 SOURCES += \
-    keycounter.cpp \
-    keymonitor.cpp \
+    key_count/keycounter.cpp \
+    key_count/keymonitor.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
-    keycounter.h \
-    keymonitor.h \
+    key_count/keycounter.h \
+    key_count/keymonitor.h \
     mainwindow.h
 
 FORMS += \
@@ -39,4 +43,4 @@ DISTFILES += \
     key_code.txt
 
 RESOURCES += \
-    resources.qrc
+    resources/resources.qrc

@@ -29,8 +29,6 @@ KeyCounter::KeyCounter(QSettings *settings, QObject *parent)
     {
         keyCountMap.insert(key, settings->value("count/" + QString::number(key), 0).toInt());
     }
-
-
 }
 
 KeyCounter::~KeyCounter()

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/documents">
+        <file>key_code.txt</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file alias="appicon">icons/counter.png</file>
+    </qresource>
+</RCC>
