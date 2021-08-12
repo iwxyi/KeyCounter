@@ -3,6 +3,7 @@
 #include <QUrl>
 #include <QMessageBox>
 #include <QDir>
+#include <QTimer>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -30,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
     // 初始化
     initView();
     initTray();
+
+    if (!settings->value("mainwindow/hide", false).toBool())
+        this->show();
 }
 
 MainWindow::~MainWindow()
@@ -124,12 +128,16 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::showEvent(QShowEvent *e)
 {
     restoreGeometry(settings->value("mainwindow/geometry").toByteArray());
+    settings->setValue("mainwindow/hide", false);
     return QMainWindow::showEvent(e);
 }
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
     settings->setValue("mainwindow/geometry", saveGeometry());
+    QTimer::singleShot(5000, [=]{
+        settings->setValue("mainwindow/hide", true);
+    });
     return QMainWindow::closeEvent(e);
 }
 

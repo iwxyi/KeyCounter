@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
     a.setFont(font);
 
     MainWindow w;
-    w.show();
 
     /* QObject::connect(&a, &QtSingleApplication::messageReceived, &w, [&](const QString&) {
         w.show(); // 单例自带的 setActivationWindow() 无法打开hide的窗口，得手动show一下才行
