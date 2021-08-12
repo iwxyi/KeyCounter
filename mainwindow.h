@@ -21,6 +21,8 @@ public:
 private:
     void initView();
     void initTray();
+    void initTable();
+    void hideKeypad(bool hide);
 
 private slots:
     void trayAction(QSystemTrayIcon::ActivationReason reason);
@@ -34,6 +36,8 @@ private slots:
     void on_actionAbout_triggered();
 
     void on_actionStartup_triggered();
+
+    void on_actionKeypad_triggered();
 
 protected:
     void showEvent(QShowEvent* e) override;

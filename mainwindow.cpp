@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     // 初始化
     initView();
     initTray();
+    initTable();
 
     if (!settings->value("mainwindow/hide", false).toBool())
         this->show();
@@ -43,11 +44,34 @@ MainWindow::~MainWindow()
 
 void MainWindow::initView()
 {
-    // 初始化Model
+    // 设置菜单
+    ui->actionStartup->setChecked(settings->value("runtime/reboot", false).toBool());
+    ui->actionKeypad->setChecked(settings->value("counter/keypad", true).toBool());
+}
+
+void MainWindow::initTray()
+{
+    QSystemTrayIcon* tray = new QSystemTrayIcon(this);
+    tray->setIcon(QIcon(":/icons/appicon"));
+    tray->setToolTip("KeyCounter");
+    tray->show();
+
+    connect(tray,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(trayAction(QSystemTrayIcon::ActivationReason)));
+}
+
+void MainWindow::initTable()
+{
+    if (countModel)
+        countModel->deleteLater();
+    tableRowMapping.clear();
+
+    // 创建Model
     countModel = new QStandardItemModel(this);
     countModel->setColumnCount(2);
     countModel->setHorizontalHeaderLabels({"键名", "次数"});
     countModel->setRowCount(KeyCodeNameMap.count());
+
+    bool keypad = ui->actionKeypad->isChecked();
 
     // 设置表格值
     auto keys = KeyCodeNameMap.keys();
@@ -61,18 +85,25 @@ void MainWindow::initView()
     }
     ui->countTable->setModel(countModel);
 
-    bool reboot = settings->value("runtime/reboot", false).toBool();
-    ui->actionStartup->setChecked(reboot);
+    // 判断小键盘
+    if (!keypad)
+    {
+        hideKeypad(true);
+    }
 }
 
-void MainWindow::initTray()
+void MainWindow::hideKeypad(bool hide)
 {
-    QSystemTrayIcon* tray = new QSystemTrayIcon(this);
-    tray->setIcon(QIcon(":/icons/appicon"));
-    tray->setToolTip("KeyCounter");
-    tray->show();
-
-    connect(tray,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(trayAction(QSystemTrayIcon::ActivationReason)));
+    for (ulong key = 96; key <= 111; key++)
+    {
+        if (tableRowMapping.contains(key))
+        {
+            if (hide)
+                ui->countTable->hideRow(tableRowMapping.value(key));
+            else
+                ui->countTable->showRow(tableRowMapping.value(key));
+        }
+    }
 }
 
 void MainWindow::trayAction(QSystemTrayIcon::ActivationReason reason)
@@ -156,4 +187,12 @@ void MainWindow::on_actionStartup_triggered()
     ui->actionStartup->setChecked(reboot);
     qInfo() << "设置自启：" << reboot;
     reg->deleteLater();
+}
+
+void MainWindow::on_actionKeypad_triggered()
+{
+    bool keypad = ui->actionKeypad->isChecked();
+    settings->setValue("counter/keypad", keypad);
+    hideKeypad(!keypad);
+    ui->countTable->update();
 }

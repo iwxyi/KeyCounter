@@ -50,9 +50,8 @@
     <property name="title">
      <string>统计</string>
     </property>
-    <addaction name="actionFilePath"/>
     <addaction name="actionStartup"/>
-    <addaction name="actionExit"/>
+    <addaction name="actionKeypad"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -61,6 +60,14 @@
     <addaction name="actionAbout"/>
     <addaction name="actionGitHub"/>
    </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="actionFilePath"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menu_3"/>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
   </widget>
@@ -91,6 +98,14 @@
    </property>
    <property name="text">
     <string>开机自启</string>
+   </property>
+  </action>
+  <action name="actionKeypad">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>小键盘</string>
    </property>
   </action>
  </widget>

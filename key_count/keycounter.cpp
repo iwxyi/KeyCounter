@@ -8,23 +8,29 @@ KeyCounter::KeyCounter(QSettings *settings, QObject *parent)
     : QObject(parent),
       settings(settings)
 {
+    // 设置启用的数组
+
     // 设置要监控的键码
     QFile keyFile(":/documents/key_code.txt");
     keyFile.open(QIODevice::ReadOnly);
     QTextStream keyCodeIn(&keyFile);
     keyCodeIn.setCodec("UTF-8");
-    QString line = keyCodeIn.readLine();
-    while (!line.isNull())
+    QString line;
+    QString label;
+    while (!(line = keyCodeIn.readLine().trimmed()).isNull())
     {
-        if (!line.startsWith("#"))
+        if (line.startsWith("#"))
+            continue;
+        if (line.endsWith(":"))
         {
-            QStringList sl = line.split("\t", QString::SkipEmptyParts);
-            if (sl.size() >= 2)
-            {
-                KeyCodeNameMap.insert(static_cast<ulong>(sl.at(0).toInt()), sl.at(1));
-            }
+            label = line.left(line.length() - 1).trimmed();
+            continue;
         }
-        line = keyCodeIn.readLine();
+        QStringList sl = line.split("\t", QString::SkipEmptyParts);
+        if (sl.size() >= 2)
+        {
+            KeyCodeNameMap.insert(static_cast<ulong>(sl.at(0).toInt()), sl.at(1));
+        }
     }
 
     // 恢复之前的键值
