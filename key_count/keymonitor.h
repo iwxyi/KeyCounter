@@ -33,7 +33,7 @@ protected:
     KeyMonitor();
 
 signals:
-    void getKey(int);
+    void getKey(ulong key);
 };
 
 #endif // KEYCAPTURER_H

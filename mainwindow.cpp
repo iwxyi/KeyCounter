@@ -26,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
                     ui->countTable->update();
                 }
             });
-    KeyMonitor::instance()->startHook();
 
     // 初始化
     initView();
@@ -135,7 +134,6 @@ void MainWindow::trayAction(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-
 void MainWindow::on_actionFilePath_triggered()
 {
     QDesktopServices::openUrl(QUrl::fromLocalFile(QApplication::applicationDirPath()));
@@ -168,6 +166,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
     settings->setValue("mainwindow/geometry", saveGeometry());
     QTimer::singleShot(5000, [=]{
         settings->setValue("mainwindow/hide", true);
+        settings->sync();
     });
     return QMainWindow::closeEvent(e);
 }

@@ -2,14 +2,13 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QTimer>
 #include "keycounter.h"
 
 KeyCounter::KeyCounter(QSettings *settings, QObject *parent)
     : QObject(parent),
       settings(settings)
 {
-    // 设置启用的数组
-
     // 设置要监控的键码
     QFile keyFile(":/documents/key_code.txt");
     keyFile.open(QIODevice::ReadOnly);
@@ -38,10 +37,22 @@ KeyCounter::KeyCounter(QSettings *settings, QObject *parent)
     {
         keyCountMap.insert(key, settings->value("count/" + QString::number(key), 0).toInt());
     }
+
+    // 开始监听
+    KeyMonitor::instance()->startHook();
+
+    // 定时重启（因为一直有过一段时间就无效的问题）
+    QTimer* restartTimer = new QTimer(this);
+    restartTimer->setInterval(3600000); // 1小时重启一次
+    connect(restartTimer, &QTimer::timeout, this, [=]{
+        KeyMonitor::instance()->stopHook();
+        KeyMonitor::instance()->startHook();
+    });
 }
 
 KeyCounter::~KeyCounter()
 {
+    // 结束监听
     KeyMonitor::instance()->stopHook();
 }
 
