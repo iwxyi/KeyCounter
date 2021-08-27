@@ -52,6 +52,8 @@
     </property>
     <addaction name="actionStartup"/>
     <addaction name="actionKeypad"/>
+    <addaction name="separator"/>
+    <addaction name="actionRestartMonitor"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -106,6 +108,11 @@
    </property>
    <property name="text">
     <string>小键盘</string>
+   </property>
+  </action>
+  <action name="actionRestartMonitor">
+   <property name="text">
+    <string>重启监控</string>
    </property>
   </action>
  </widget>

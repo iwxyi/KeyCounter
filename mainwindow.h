@@ -39,6 +39,8 @@ private slots:
 
     void on_actionKeypad_triggered();
 
+    void on_actionRestartMonitor_triggered();
+
 protected:
     void showEvent(QShowEvent* e) override;
     void closeEvent(QCloseEvent*e) override;

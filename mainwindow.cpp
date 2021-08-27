@@ -195,3 +195,8 @@ void MainWindow::on_actionKeypad_triggered()
     hideKeypad(!keypad);
     ui->countTable->update();
 }
+
+void MainWindow::on_actionRestartMonitor_triggered()
+{
+    counter->restartMonitor();
+}

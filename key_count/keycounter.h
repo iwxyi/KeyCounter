@@ -15,6 +15,8 @@ public:
 
     int getKeyCount(ulong keyCode) const;
 
+    void restartMonitor();
+
 private:
     QSettings* settings;
     QMap<ulong, int> keyCountMap;

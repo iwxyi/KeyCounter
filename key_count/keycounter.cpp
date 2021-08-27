@@ -45,8 +45,7 @@ KeyCounter::KeyCounter(QSettings *settings, QObject *parent)
     QTimer* restartTimer = new QTimer(this);
     restartTimer->setInterval(3600000); // 1小时重启一次
     connect(restartTimer, &QTimer::timeout, this, [=]{
-        KeyMonitor::instance()->stopHook();
-        KeyMonitor::instance()->startHook();
+        restartMonitor();
     });
 }
 
@@ -66,4 +65,10 @@ void KeyCounter::addKey(ulong keyCode)
 int KeyCounter::getKeyCount(ulong keyCode) const
 {
     return keyCountMap.value(keyCode);
+}
+
+void KeyCounter::restartMonitor()
+{
+    KeyMonitor::instance()->stopHook();
+    KeyMonitor::instance()->startHook();
 }
