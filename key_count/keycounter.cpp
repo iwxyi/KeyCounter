@@ -47,6 +47,7 @@ KeyCounter::KeyCounter(QSettings *settings, QObject *parent)
     connect(restartTimer, &QTimer::timeout, this, [=]{
         restartMonitor();
     });
+    restartTimer->start();
 }
 
 KeyCounter::~KeyCounter()
